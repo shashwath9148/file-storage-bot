@@ -5,12 +5,10 @@ const bot = new TelegramBot(BOT_TOKEN, { polling: true });
 
 let db = require('./storage.json');
 
-// Save to storage file
 function saveDB() {
   fs.writeFileSync('./storage.json', JSON.stringify(db, null, 2));
 }
 
-// Handle uploaded files
 bot.on('message', (msg) => {
   const chatId = msg.chat.id;
 
@@ -29,7 +27,6 @@ bot.on('message', (msg) => {
   }
 });
 
-// Show My Files with delete buttons
 bot.onText(/\/myfiles/, (msg) => {
   const chatId = msg.chat.id;
   const files = db[chatId];
@@ -52,7 +49,6 @@ bot.onText(/\/myfiles/, (msg) => {
   });
 });
 
-// Handle delete file button
 bot.on("callback_query", (query) => {
   const chatId = query.message.chat.id;
   const userFiles = db[chatId];
@@ -73,9 +69,9 @@ bot.on("callback_query", (query) => {
   }
 });
 
-// Show total user count
 bot.onText(/\/users/, (msg) => {
-  const chatId = msg.chat.id;
   const totalUsers = Object.keys(db).length;
+  bot.sendMessage(msg.chat.id, `👥 Total users who uploaded files: *${totalUsers}*`, { parse_mode: "Markdown" });
+});  const totalUsers = Object.keys(db).length;
   bot.sendMessage(chatId, `👥 Total users who uploaded files: *${totalUsers}*`, { parse_mode: "Markdown" });
 });
